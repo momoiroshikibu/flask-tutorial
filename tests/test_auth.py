@@ -11,7 +11,7 @@ def test_register(client, app):
 
     with app.app_context():
         assert get_db().execute(
-            "select * from user wheree username = 'a'",
+            "select * from user where username = 'a'",
         ).fetchone() is not None
 
 
@@ -42,11 +42,13 @@ def test_login(client, auth):
     ('a', 'test', b'Incorrect username.'),
     ('test', 'a', b'Incorrect password.'),
 ))
-def test_login_validate_input(auth, ursername, password, message):
+def test_login_validate_input(auth, username, password, message):
     response = auth.login(username, password)
     assert message in response.data
 
 def test_logout(client, auth):
-    response = auth.logout():
+    auth.login()
+
     with client:
-        assert 'user_id' is not in session
+        auth.logout()
+        assert 'user_id' not in session
